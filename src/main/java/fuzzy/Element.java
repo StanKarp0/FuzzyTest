@@ -23,6 +23,10 @@ public class Element {
         return value;
     }
 
+    public Variable getVariable() {
+        return var;
+    }
+
     @Override
     public String toString() {
         return var + ": "+value + " / " + prob;

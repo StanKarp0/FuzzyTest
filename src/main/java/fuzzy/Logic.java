@@ -1,10 +1,8 @@
 package fuzzy;
 
 import fuzzy.expressions.Expression;
-import fuzzy.functions.OutputFunction;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -18,17 +16,26 @@ public class Logic {
         this.rules = new LinkedList<>();
     }
 
-    public void addRule(Expression e, List<R> values) {
-        rules.add(new Rule(e, values));
+    public void addRule(Expression e, R... values) {
+        rules.add(new Rule(e, Arrays.asList(values)));
     }
 
-    public List<Element> getElements(Map<String, Double> map) {
-        List<Element> result = new ArrayList<>();
-        for(Rule r: rules){
-            result.addAll(r.getElements(map));
+    public Map<String, Double> getResults(Map<String, Double> map) {
+        List<Element> elements = new ArrayList<>();
+        for(Rule r: rules)
+            elements.addAll(r.getElements(map));
+        Map<String, Double> results = new HashMap<>();
+        Map<Variable, List<Element>> collect = elements.stream()
+                .collect(Collectors.groupingBy(Element::getVariable));
+        for (Map.Entry<Variable, List<Element>> entry : collect.entrySet()) {
+            Map<String, Double> wages = new HashMap<>();
+            for(Element e: entry.getValue()) {
+                // TODO few prob to same value, max? average?
+                wages.put(e.getValue(), e.getProb());
+            }
+            results.put(entry.getKey().getName(), entry.getKey().defuzzification(wages));
         }
-//        return rules.stream().map(r -> r.getElements(map)).collect(Collectors);
-        return result;
+        return results;
     }
 
 
@@ -45,7 +52,7 @@ public class Logic {
         public List<Element> getElements(Map<String, Double> args) {
             List<Element> result = new ArrayList<>();
             for (R r: values) {
-                result.add(new Element(r.getOutput(), r.getValue(), e.getProbability(args)));
+                result.add(new Element(r.getVariable(), r.getValue(), e.getProbability(args)));
             }
             return result;
         }

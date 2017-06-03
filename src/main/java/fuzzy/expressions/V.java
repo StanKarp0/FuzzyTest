@@ -1,6 +1,6 @@
 package fuzzy.expressions;
 
-import fuzzy.Input;
+import fuzzy.Variable;
 
 import java.util.Map;
 
@@ -9,10 +9,10 @@ import java.util.Map;
  */
 public class V extends Expression {
 
-    private final Input var;
+    private final Variable var;
     private final String value;
 
-    public V(Input var, String value) {
+    public V(Variable var, String value) {
         this.var = var;
         this.value = value;
     }
@@ -21,7 +21,7 @@ public class V extends Expression {
     @Override
     public double getProbability(Map<String, Double> args) {
         return args.containsKey(var.getName()) ?
-                var.getProbability(args.get(var.getName()), value) :
+                var.fuzzification(args.get(var.getName()), value) :
                 0.0;
     }
 }

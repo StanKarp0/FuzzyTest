@@ -17,15 +17,15 @@ public class TestInput extends TestCase {
 
     public void testGetElement() {
 
-        Input input = new Input("Price");
+        Variable input = new Variable("Price");
         input.addMFnc("Low", new Trapmf(0, 0.1, 20., 50.));
         input.addMFnc("Medium", new Trimf(40., 200, 500));
         input.addMFnc("High", new Trapmf(400., 600., 9000., 10000.));
 
-        assertEquals(1, input.getProbability(10., "Low"));
-        assertEquals(1, input.getProbability(300., "Medium"));
-        assertEquals(1, input.getProbability(700., "High"));
-        assertEquals(0, input.getProbability(-700., "None"));
+        assertEquals(1, input.fuzzification(10., "Low"));
+        assertEquals(1, input.fuzzification(300., "Medium"));
+        assertEquals(1, input.fuzzification(700., "High"));
+        assertEquals(0, input.fuzzification(-700., "None"));
 
     }
 

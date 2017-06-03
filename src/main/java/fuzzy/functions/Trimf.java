@@ -3,7 +3,7 @@ package fuzzy.functions;
 /**
  * Created by wojciech on 02.06.17.
  */
-public class Trimf implements InputFunction, OutputFunction {
+public class Trimf implements Function {
 
     private final double a, bma, cmb, c;
 
@@ -21,9 +21,4 @@ public class Trimf implements InputFunction, OutputFunction {
         return Math.max(Math.min(t1, t2), 0.);
     }
 
-    @Override
-    public double getCrisp(double probability) {
-        // TODO reverse or what??
-        return 0.;
-    }
 }

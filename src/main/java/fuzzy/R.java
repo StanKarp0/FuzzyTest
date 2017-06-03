@@ -5,10 +5,10 @@ package fuzzy;
  */
 public class R {
 
-    private final Output var;
+    private final Variable var;
     private final String value;
 
-    public R(Output var, String value){
+    public R(Variable var, String value){
 
         this.var = var;
         this.value = value;
@@ -19,7 +19,7 @@ public class R {
         return var + ": " + value;
     }
 
-    public Output getOutput() {
+    public Variable getVariable() {
         return var;
     }
 
