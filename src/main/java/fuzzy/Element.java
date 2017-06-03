@@ -9,21 +9,21 @@ public class Element {
     private final double prob;
     private final Variable var;
 
-    public Element(Variable var, String value, double prob) {
+    Element(Variable var, String value, double prob) {
         this.var = var;
         this.value = value;
         this.prob = prob;
     }
 
-    public double getProb() {
+    double getProb() {
         return prob;
     }
 
-    public String getValue() {
+    String getValue() {
         return value;
     }
 
-    public Variable getVariable() {
+    Variable getVariable() {
         return var;
     }
 

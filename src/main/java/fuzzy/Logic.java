@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  */
 public class Logic {
 
-    final List<Rule> rules;
+    private final List<Rule> rules;
 
     public Logic() {
         this.rules = new LinkedList<>();
@@ -22,19 +22,22 @@ public class Logic {
 
     public Map<String, Double> getResults(Map<String, Double> map) {
         List<Element> elements = new ArrayList<>();
+
         for(Rule r: rules)
             elements.addAll(r.getElements(map));
+
         Map<String, Double> results = new HashMap<>();
         Map<Variable, List<Element>> collect = elements.stream()
                 .collect(Collectors.groupingBy(Element::getVariable));
+
         for (Map.Entry<Variable, List<Element>> entry : collect.entrySet()) {
             Map<String, Double> wages = new HashMap<>();
             for(Element e: entry.getValue()) {
-                // TODO few prob to same value, max? average?
-                wages.put(e.getValue(), e.getProb());
+                wages.computeIfPresent(e.getValue(), (s, v) -> Math.max(v, e.getProb()));
             }
             results.put(entry.getKey().getName(), entry.getKey().defuzzification(wages));
         }
+
         return results;
     }
 

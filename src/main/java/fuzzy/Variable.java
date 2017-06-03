@@ -12,10 +12,14 @@ public class Variable {
 
     private final String name;
     private final Map<String, Function> mFnc;
+    private final double max, min;
+    private final static double N_INT = 5000;
 
-    Variable(String name) {
+    Variable(String name, double min, double max) {
         this.name = name;
         this.mFnc = new HashMap<>();
+        this.min = min;
+        this.max = max;
     }
 
     @Override
@@ -31,10 +35,31 @@ public class Variable {
         mFnc.put(value, fnc);
     }
 
+
     public double defuzzification(Map<String, Double> wages) {
-        System.out.println(wages);
-        // TODO defuzzification
-        return 0.;
+        java.util.function.Function<Double, Double> getMax = (Double x) -> {
+            double tempMax = 0.;
+            for (Map.Entry<String, Function> entry : mFnc.entrySet()) {
+                if(wages.containsKey(entry.getKey())) {
+                    double value = entry.getValue().getProbability(x) * wages.get(entry.getKey());
+                    if (tempMax < value)
+                        tempMax = value;
+                }
+            }
+            return tempMax;
+        };
+
+        double dx = (max - min)/N_INT;
+        double sumX = 0., sum = 0.;
+        double f = getMax.apply(min), f2;
+        for(double x = min; x <= max; x += dx) {
+            f2 = getMax.apply(x);
+            final double a = (f + f2)*(dx/2.);
+            sumX += x * a;
+            sum += a;
+            f = f2;
+        }
+        return sumX/sum;
     }
 
     public double fuzzification(double x, String value) {

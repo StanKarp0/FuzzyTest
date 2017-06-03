@@ -17,7 +17,7 @@ public class TestInput extends TestCase {
 
     public void testGetElement() {
 
-        Variable input = new Variable("Price");
+        Variable input = new Variable("Price", 0., 10000.);
         input.addMFnc("Low", new Trapmf(0, 0.1, 20., 50.));
         input.addMFnc("Medium", new Trimf(40., 200, 500));
         input.addMFnc("High", new Trapmf(400., 600., 9000., 10000.));

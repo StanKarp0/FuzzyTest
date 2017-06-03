@@ -20,16 +20,16 @@ public class LogicTest {
     @Test
     public void getElement() throws Exception {
 
-        Variable service = new Variable("Service");
+        Variable service = new Variable("Service", 0., 1.);
         service.addMFnc("Poor", new Trapmf(-0.1, 0, 0.1, 0.3));
         service.addMFnc("Good", new Trimf(0., 0.5, 1.));
         service.addMFnc("Excellent", new Trapmf(0.6, 0.8, 1., 1.1));
 
-        Variable food = new Variable("Food");
-        food.addMFnc("Rancid", new Trapmf(0.1, 0, 1., 3.));
+        Variable food = new Variable("Food", 0., 10.);
+        food.addMFnc("Rancid", new Trapmf(-0.1, 0, 1., 3.));
         food.addMFnc("Delicious", new Trapmf(7., 8., 10., 11.));
 
-        Variable tip = new Variable("Tip");
+        Variable tip = new Variable("Tip", 0., 30.);
         tip.addMFnc("Cheap", new Trimf(0., 5., 10.));
         tip.addMFnc("Average", new Trimf(10., 15., 20.));
         tip.addMFnc("Generous", new Trimf(20., 25., 30.));
@@ -43,10 +43,17 @@ public class LogicTest {
         l.addRule(new Or(new V(service, "Excellent"), new V(food, "Delicious")),
                 new R(tip,"Generous"));
 
-        Map<String, Double> map = new HashMap<>();
-        map.put("Service", 0.9);
-        map.put("Food", 3.);
-        System.out.println(l.getResults(map));
+
+
+        for(double s = 0; s <= 1; s+= 0.02){
+            for(double f = 0.; f <= 10.; f += 0.2) {
+                Map<String, Double> map = new HashMap<>();
+                map.put("Service", s);
+                map.put("Food", f);
+                System.out.println(s + " " + f + " " + l.getResults(map).get("Tip"));
+            }
+        }
+
 
     }
 
