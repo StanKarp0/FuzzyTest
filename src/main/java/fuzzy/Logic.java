@@ -1,7 +1,5 @@
 package fuzzy;
 
-import fuzzy.expressions.Expression;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,11 +14,12 @@ public class Logic {
         this.rules = new LinkedList<>();
     }
 
-    public void addRule(Expression e, R... values) {
+    public void addRule(Expression e, OutR... values) {
         rules.add(new Rule(e, Arrays.asList(values)));
     }
 
     public Map<String, Double> getResults(Map<String, Double> map) {
+
         List<Element> elements = new ArrayList<>();
 
         for(Rule r: rules)
@@ -33,7 +32,12 @@ public class Logic {
         for (Map.Entry<Variable, List<Element>> entry : collect.entrySet()) {
             Map<String, Double> wages = new HashMap<>();
             for(Element e: entry.getValue()) {
-                wages.computeIfPresent(e.getValue(), (s, v) -> Math.max(v, e.getProb()));
+                if(wages.containsKey(e.getValue())) {
+                    if (wages.get(e.getValue()) < e.getProb())
+                        wages.put(e.getValue(), e.getProb());
+                } else {
+                    wages.put(e.getValue(), e.getProb());
+                }
             }
             results.put(entry.getKey().getName(), entry.getKey().defuzzification(wages));
         }
@@ -45,17 +49,17 @@ public class Logic {
     private static class Rule {
 
         private final Expression e;
-        private final List<R> values;
+        private final List<OutR> values;
 
-        Rule(Expression e, List<R> values) {
+        Rule(Expression e, List<OutR> values) {
             this.e = e;
             this.values = values;
         }
 
         public List<Element> getElements(Map<String, Double> args) {
             List<Element> result = new ArrayList<>();
-            for (R r: values) {
-                result.add(new Element(r.getVariable(), r.getValue(), e.getProbability(args)));
+            for (OutR r: values) {
+                result.add(new Element(r.getVariable(), r.getValue(), e.apply(args)));
             }
             return result;
         }

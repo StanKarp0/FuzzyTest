@@ -1,13 +1,14 @@
 package fuzzy;
 
-import fuzzy.expressions.*;
 import fuzzy.functions.Trapmf;
 import fuzzy.functions.Trimf;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static fuzzy.Expression.*;
+
 
 /**
  * Created by wojciech on 03.06.17.
@@ -36,14 +37,14 @@ public class LogicTest {
 
         Logic l = new Logic();
 
-        l.addRule(new Or(new V(service, "Poor"), new V(food, "Rancid")),
-                new R(tip, "Cheap"));
-        l.addRule(new V(service, "Good"),
-                new R(tip, "Average"));
-        l.addRule(new Or(new V(service, "Excellent"), new V(food, "Delicious")),
-                new R(tip,"Generous"));
+        l.addRule(or(v(service, "Poor"), v(food, "Rancid")), r(tip, "Cheap"));
+        l.addRule(v(service, "Good"), r(tip, "Average"));
+        l.addRule(or(v(service, "Excellent"), v(food, "Delicious")), r(tip,"Generous"));
 
-
+//        Map<String, Double> map = new HashMap<>();
+//        map.put("Service", 0.3);
+//        map.put("Food", 9.);
+//        System.out.println(0.3 + " " + 9. + " " + l.getResults(map).get("Tip"));
 
         for(double s = 0; s <= 1; s+= 0.02){
             for(double f = 0.; f <= 10.; f += 0.2) {

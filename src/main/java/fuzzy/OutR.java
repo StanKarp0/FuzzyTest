@@ -3,12 +3,12 @@ package fuzzy;
 /**
  * Created by wojciech on 03.06.17.
  */
-public class R {
+public class OutR {
 
     private final Variable var;
     private final String value;
 
-    public R(Variable var, String value){
+    public OutR(Variable var, String value){
 
         this.var = var;
         this.value = value;
