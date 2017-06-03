@@ -1,16 +1,16 @@
 package fuzzy;
 
-import fuzzy.functions.FInputFunction;
-
 /**
  * Created by wojciech on 02.06.17.
  */
-public class FElement {
+public class Element {
 
     private final String value;
     private final double prob;
+    private final Variable var;
 
-    public FElement(String value, double prob) {
+    public Element(Variable var, String value, double prob) {
+        this.var = var;
         this.value = value;
         this.prob = prob;
     }
@@ -21,5 +21,10 @@ public class FElement {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return var + ": "+value + " / " + prob;
     }
 }

@@ -3,7 +3,7 @@ package fuzzy.functions;
 /**
  * Created by wojciech on 02.06.17.
  */
-public class Trapmf implements FInputFunction, FOutputFunction {
+public class Trapmf implements InputFunction, OutputFunction {
 
     private final double a, bma, dmc, d;
 

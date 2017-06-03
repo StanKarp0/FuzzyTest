@@ -3,7 +3,7 @@ package fuzzy.functions;
 /**
  * Created by wojciech on 02.06.17.
  */
-public class Trimf implements FInputFunction, FOutputFunction {
+public class Trimf implements InputFunction, OutputFunction {
 
     private final double a, bma, cmb, c;
 
