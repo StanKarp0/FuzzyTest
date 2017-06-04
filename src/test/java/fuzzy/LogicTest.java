@@ -1,8 +1,5 @@
 package fuzzy;
 
-import fuzzy.functions.Trapmf;
-import fuzzy.functions.Trimf;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static fuzzy.Expression.*;
-
+import static fuzzy.FFunction.*;
 
 /**
  * Created by wojciech on 03.06.17.
@@ -24,18 +21,18 @@ public class LogicTest {
     public void getElement() throws Exception {
 
         Variable service = new Variable("Service", 0., 1.);
-        service.addMFnc("Poor", new Trapmf(-0.1, 0, 0.1, 0.3));
-        service.addMFnc("Good", new Trimf(0., 0.5, 1.));
-        service.addMFnc("Excellent", new Trapmf(0.6, 0.8, 1., 1.1));
+        service.addMFnc("Poor", trapmf(-0.1, 0, 0.1, 0.3));
+        service.addMFnc("Good", trimf(0., 0.5, 1.));
+        service.addMFnc("Excellent", trapmf(0.6, 0.8, 1., 1.1));
 
         Variable food = new Variable("Food", 0., 10.);
-        food.addMFnc("Rancid", new Trapmf(-0.1, 0, 1., 3.));
-        food.addMFnc("Delicious", new Trapmf(7., 8., 10., 11.));
+        food.addMFnc("Rancid", trapmf(-0.1, 0, 1., 3.));
+        food.addMFnc("Delicious", trapmf(7., 8., 10., 11.));
 
         Variable tip = new Variable("Tip", 0., 30.);
-        tip.addMFnc("Cheap", new Trimf(0., 5., 10.));
-        tip.addMFnc("Average", new Trimf(10., 15., 20.));
-        tip.addMFnc("Generous", new Trimf(20., 25., 30.));
+        tip.addMFnc("Cheap", trimf(0., 5., 10.));
+        tip.addMFnc("Average", trimf(10., 15., 20.));
+        tip.addMFnc("Generous", trimf(20., 25., 30.));
 
         Logic l = new Logic();
 
@@ -57,18 +54,18 @@ public class LogicTest {
     public void getElement2() throws Exception {
 
         Variable service = new Variable("Service", 0., 1.);
-        service.addMFnc("Poor", new Trapmf(-0.1, 0, 0.1, 0.3));
-        service.addMFnc("Good", new Trimf(0., 0.5, 1.));
-        service.addMFnc("Excellent", new Trapmf(0.6, 0.8, 1., 1.1));
+        service.addMFnc("Poor", trapmf(-0.1, 0, 0.1, 0.3));
+        service.addMFnc("Good", trimf(0., 0.5, 1.));
+        service.addMFnc("Excellent", trapmf(0.6, 0.8, 1., 1.1));
 
         Variable food = new Variable("Food", 0., 10.);
-        food.addMFnc("Rancid", new Trapmf(-0.1, 0, 1., 3.));
-        food.addMFnc("Delicious", new Trapmf(7., 8., 10., 11.));
+        food.addMFnc("Rancid", trapmf(-0.1, 0, 1., 3.));
+        food.addMFnc("Delicious", trapmf(7., 8., 10., 11.));
 
         Variable tip = new Variable("Tip", 0., 30.);
-        tip.addMFnc("Cheap", new Trimf(0., 5., 10.));
-        tip.addMFnc("Average", new Trimf(10., 15., 20.));
-        tip.addMFnc("Generous", new Trimf(20., 25., 30.));
+        tip.addMFnc("Cheap", trimf(0., 5., 10.));
+        tip.addMFnc("Average", trimf(10., 15., 20.));
+        tip.addMFnc("Generous", trimf(20., 25., 30.));
 
         Logic l = new Logic();
 

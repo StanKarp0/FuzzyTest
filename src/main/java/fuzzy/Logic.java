@@ -15,7 +15,7 @@ public class Logic {
     }
 
     public void addRule(Expression e, OutR... values) {
-        rules.add(new Rule(e, Arrays.asList(values)));
+        rules.add(rule(e, Arrays.asList(values)));
     }
 
     public Map<String, Double> results(Map<String, Double> map) {
@@ -23,7 +23,7 @@ public class Logic {
         List<Element> elements = new ArrayList<>();
 
         for(Rule r: rules)
-            elements.addAll(r.getElements(map));
+            elements.addAll(r.apply(map));
 
         Map<String, Double> results = new HashMap<>();
         Map<Variable, List<Element>> collect = elements.stream()
@@ -45,24 +45,20 @@ public class Logic {
         return results;
     }
 
+    @FunctionalInterface
+    private interface Rule {
+        List<Element> apply(Map<String, Double> args);
+    }
 
-    private class Rule {
-
-        private final Expression e;
-        private final List<OutR> values;
-
-        Rule(Expression e, List<OutR> values) {
-            this.e = e;
-            this.values = values;
-        }
-
-        public List<Element> getElements(Map<String, Double> args) {
+    private Rule rule(Expression e, List<OutR> values) {
+        return args -> {
             List<Element> result = new ArrayList<>();
+            final double prob = e.apply(args);
             for (OutR r: values) {
-                result.add(new Element(r.getVariable(), r.getValue(), e.apply(args)));
+                result.add(new Element(r.getVariable(), r.getValue(), prob));
             }
             return result;
-        }
+        };
     }
 
     private class Element {

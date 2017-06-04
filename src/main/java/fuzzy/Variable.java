@@ -1,7 +1,5 @@
 package fuzzy;
 
-import fuzzy.functions.Function;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +9,7 @@ import java.util.Map;
 public class Variable {
 
     private final String name;
-    private final Map<String, Function> mFnc;
+    private final Map<String, FFunction> mFnc;
     private final double max, min;
     private final static double N_INT = 5000;
 
@@ -31,7 +29,7 @@ public class Variable {
         return name;
     }
 
-    public void addMFnc(String value, Function fnc) {
+    public void addMFnc(String value, FFunction fnc) {
         mFnc.put(value, fnc);
     }
 
@@ -39,9 +37,9 @@ public class Variable {
     public double defuzzification(Map<String, Double> wages) {
         java.util.function.Function<Double, Double> getMax = (Double x) -> {
             double tempMax = 0.;
-            for (Map.Entry<String, Function> entry : mFnc.entrySet()) {
+            for (Map.Entry<String, FFunction> entry : mFnc.entrySet()) {
                 if(wages.containsKey(entry.getKey())) {
-                    double value = entry.getValue().getProbability(x) * wages.get(entry.getKey());
+                    double value = entry.getValue().apply(x) * wages.get(entry.getKey());
                     if (tempMax < value)
                         tempMax = value;
                 }
@@ -63,7 +61,7 @@ public class Variable {
     }
 
     public double fuzzification(double x, String value) {
-        return mFnc.containsKey(value) ? mFnc.get(value).getProbability(x) : 0.0;
+        return mFnc.containsKey(value) ? mFnc.get(value).apply(x) : 0.0;
     }
 
 }
