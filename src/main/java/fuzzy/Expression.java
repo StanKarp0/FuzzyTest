@@ -11,7 +11,8 @@ public interface Expression {
     double apply(Map<String, Double> args);
 
     static Expression v(Variable var, String value) {
-        return args -> args.containsKey(var.getName()) ?
+        return args ->
+                args.containsKey(var.getName()) ?
                 var.fuzzification(args.get(var.getName()), value) : 0.0;
     }
 

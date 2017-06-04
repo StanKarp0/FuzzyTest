@@ -18,7 +18,7 @@ public class Logic {
         rules.add(new Rule(e, Arrays.asList(values)));
     }
 
-    public Map<String, Double> getResults(Map<String, Double> map) {
+    public Map<String, Double> results(Map<String, Double> map) {
 
         List<Element> elements = new ArrayList<>();
 
@@ -46,7 +46,7 @@ public class Logic {
     }
 
 
-    private static class Rule {
+    private class Rule {
 
         private final Expression e;
         private final List<OutR> values;
@@ -62,6 +62,36 @@ public class Logic {
                 result.add(new Element(r.getVariable(), r.getValue(), e.apply(args)));
             }
             return result;
+        }
+    }
+
+    private class Element {
+
+        private final String value;
+        private final double prob;
+        private final Variable var;
+
+        Element(Variable var, String value, double prob) {
+            this.var = var;
+            this.value = value;
+            this.prob = prob;
+        }
+
+        double getProb() {
+            return prob;
+        }
+
+        String getValue() {
+            return value;
+        }
+
+        Variable getVariable() {
+            return var;
+        }
+
+        @Override
+        public String toString() {
+            return var + ": "+value + " / " + prob;
         }
     }
 
