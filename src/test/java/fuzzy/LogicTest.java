@@ -36,9 +36,9 @@ public class LogicTest {
 
         Logic l = new Logic();
 
-        l.addRule(or(service.eq("Poor"), food.eq( "Rancid")).then("Cheap"));
+        l.addRule(service.eq("Poor").or(food.eq( "Rancid")).then("Cheap"));
         l.addRule(service.eq("Good").then("Average"));
-        l.addRule(or(service.eq("Excellent"), food.eq("Delicious")).then("Generous"));
+        l.addRule(service.eq("Excellent").or(food.eq("Delicious")).then("Generous"));
 
         for(double s = 0; s <= 1; s+= 0.02){
             for(double f = 0.; f <= 10.; f += 0.2) {
@@ -69,9 +69,9 @@ public class LogicTest {
 
         Logic l = new Logic();
 
-        l.addRule(or(service.eq("Poor"), food.eq( "Rancid")).then("Cheap"));
+        l.addRule(service.eq("Poor").or(food.eq( "Rancid")).then("Cheap"));
         l.addRule(service.eq("Good").then("Average"));
-        l.addRule(or(service.eq("Excellent"), food.eq("Delicious")).then("Generous"));
+        l.addRule(service.eq("Excellent").or(food.eq("Delicious")).then("Generous"));
 
         Map<String, Double> map = new HashMap<>();
         map.put("Service", 0.3);

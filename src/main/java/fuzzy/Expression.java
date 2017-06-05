@@ -11,6 +11,14 @@ public interface Expression {
 
     double apply(Map<String, Double> args);
 
+    default Expression or(Expression e) {
+        return args -> Math.max(apply(args), e.apply(args));
+    }
+
+    default Expression and(Expression e) {
+        return args -> Math.min(apply(args), e.apply(args));
+    }
+
     default Rule then(String value) {
         return args -> {
             Map<String, Double> res = new HashMap<>();
@@ -18,13 +26,4 @@ public interface Expression {
             return res;
         };
     }
-
-    static Expression or(Expression e1, Expression e2) {
-        return args -> Math.max(e1.apply(args), e2.apply(args));
-    }
-
-    static Expression and(Expression e1, Expression e2) {
-        return args -> Math.min(e1.apply(args), e2.apply(args));
-    }
-
 }
