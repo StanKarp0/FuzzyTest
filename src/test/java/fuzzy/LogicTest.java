@@ -36,16 +36,16 @@ public class LogicTest {
 
         Logic l = new Logic();
 
-        l.addRule(or(v(service, "Poor"), v(food, "Rancid")), r(tip, "Cheap"));
-        l.addRule(v(service, "Good"), r(tip, "Average"));
-        l.addRule(or(v(service, "Excellent"), v(food, "Delicious")), r(tip,"Generous"));
+        l.addRule(or(v(service, "Poor"), v(food, "Rancid")), "Cheap");
+        l.addRule(v(service, "Good"), "Average");
+        l.addRule(or(v(service, "Excellent"), v(food, "Delicious")),"Generous");
 
         for(double s = 0; s <= 1; s+= 0.02){
             for(double f = 0.; f <= 10.; f += 0.2) {
                 Map<String, Double> map = new HashMap<>();
                 map.put("Service", s);
                 map.put("Food", f);
-                System.out.println(s + " " + f + " " + l.results(map).get("Tip"));
+                System.out.println(s + " " + f + " " + tip.defuzzification(l.results(map)));
             }
         }
     }
@@ -69,14 +69,14 @@ public class LogicTest {
 
         Logic l = new Logic();
 
-        l.addRule(or(v(service, "Poor"), v(food, "Rancid")), r(tip, "Cheap"));
-        l.addRule(v(service, "Good"), r(tip, "Average"));
-        l.addRule(or(v(service, "Excellent"), v(food, "Delicious")), r(tip,"Generous"));
+        l.addRule(or(v(service, "Poor"), v(food, "Rancid")), "Cheap");
+        l.addRule(v(service, "Good"), "Average");
+        l.addRule(or(v(service, "Excellent"), v(food, "Delicious")),"Generous");
 
         Map<String, Double> map = new HashMap<>();
         map.put("Service", 0.3);
         map.put("Food", 9.);
-        Assert.assertTrue(Math.abs(l.results(map).get("Tip")-21.252994439047594) < 1e-5);
+        Assert.assertTrue(Math.abs(tip.defuzzification(l.results(map))-21.252994439047594) < 1e-5);
 
     }
 

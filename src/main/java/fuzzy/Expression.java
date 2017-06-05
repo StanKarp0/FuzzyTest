@@ -24,8 +24,4 @@ public interface Expression {
         return args -> Math.min(e1.apply(args), e2.apply(args));
     }
 
-    static OutR r(Variable var, String value) {
-        return new OutR(var, value);
-    }
-
 }

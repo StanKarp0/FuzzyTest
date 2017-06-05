@@ -1,7 +1,6 @@
 package fuzzy;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by wojciech on 03.06.17.
@@ -14,81 +13,32 @@ public class Logic {
         this.rules = new LinkedList<>();
     }
 
-    public void addRule(Expression e, OutR... values) {
-        rules.add(rule(e, Arrays.asList(values)));
+    public void addRule(Expression e, String value) {
+        rules.add(rule(e, value));
     }
 
-    public Map<String, Double> results(Map<String, Double> map) {
-
-        List<Element> elements = new ArrayList<>();
-
-        for(Rule r: rules)
-            elements.addAll(r.apply(map));
+    public Map<String, Double> results(Map<String, Double> args) {
 
         Map<String, Double> results = new HashMap<>();
-        Map<Variable, List<Element>> collect = elements.stream()
-                .collect(Collectors.groupingBy(Element::getVariable));
-
-        for (Map.Entry<Variable, List<Element>> entry : collect.entrySet()) {
-            Map<String, Double> wages = new HashMap<>();
-            for(Element e: entry.getValue()) {
-                if(wages.containsKey(e.getValue())) {
-                    if (wages.get(e.getValue()) < e.getProb())
-                        wages.put(e.getValue(), e.getProb());
-                } else {
-                    wages.put(e.getValue(), e.getProb());
-                }
+        for (Rule r : rules) {
+            for (Map.Entry<String, Double> entry : r.apply(args).entrySet()) {
+                double m = Math.max(results.getOrDefault(entry.getKey(), 0.), entry.getValue());
+                results.put(entry.getKey(), m);
             }
-            results.put(entry.getKey().getName(), entry.getKey().defuzzification(wages));
         }
-
         return results;
     }
 
     @FunctionalInterface
     private interface Rule {
-        List<Element> apply(Map<String, Double> args);
+        Map<String, Double> apply(Map<String, Double> args);
     }
 
-    private Rule rule(Expression e, List<OutR> values) {
+    private Rule rule(Expression e, String value) {
         return args -> {
-            List<Element> result = new ArrayList<>();
-            final double prob = e.apply(args);
-            for (OutR r: values) {
-                result.add(new Element(r.getVariable(), r.getValue(), prob));
-            }
-            return result;
+            Map<String, Double> res = new HashMap<>();
+            res.put(value, e.apply(args));
+            return res;
         };
     }
-
-    private class Element {
-
-        private final String value;
-        private final double prob;
-        private final Variable var;
-
-        Element(Variable var, String value, double prob) {
-            this.var = var;
-            this.value = value;
-            this.prob = prob;
-        }
-
-        double getProb() {
-            return prob;
-        }
-
-        String getValue() {
-            return value;
-        }
-
-        Variable getVariable() {
-            return var;
-        }
-
-        @Override
-        public String toString() {
-            return var + ": "+value + " / " + prob;
-        }
-    }
-
 }

@@ -3,6 +3,7 @@ package fuzzy;
 /**
  * Created by wojciech on 02.06.17.
  */
+@FunctionalInterface
 public interface FFunction {
 
     double apply(double v);
