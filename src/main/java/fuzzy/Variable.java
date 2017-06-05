@@ -2,6 +2,7 @@ package fuzzy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by wojciech on 03.06.17.
@@ -35,7 +36,7 @@ public class Variable {
 
 
     public double defuzzification(Map<String, Double> wages) {
-        java.util.function.Function<Double, Double> getMax = (Double x) -> {
+        Function<Double, Double> getMax = (Double x) -> {
             double tempMax = 0.;
             for (Map.Entry<String, FFunction> entry : mFnc.entrySet()) {
                 if(wages.containsKey(entry.getKey())) {
@@ -62,6 +63,10 @@ public class Variable {
 
     public double fuzzification(double x, String value) {
         return mFnc.containsKey(value) ? mFnc.get(value).apply(x) : 0.0;
+    }
+
+    public Expression eq(String value) {
+        return args -> args.containsKey(getName()) ? fuzzification(args.get(name), value) : 0.0;
     }
 
 }

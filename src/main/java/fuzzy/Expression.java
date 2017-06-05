@@ -1,5 +1,6 @@
 package fuzzy;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,10 +11,12 @@ public interface Expression {
 
     double apply(Map<String, Double> args);
 
-    static Expression v(Variable var, String value) {
-        return args ->
-                args.containsKey(var.getName()) ?
-                var.fuzzification(args.get(var.getName()), value) : 0.0;
+    default Rule then(String value) {
+        return args -> {
+            Map<String, Double> res = new HashMap<>();
+            res.put(value, apply(args));
+            return res;
+        };
     }
 
     static Expression or(Expression e1, Expression e2) {

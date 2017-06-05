@@ -13,8 +13,8 @@ public class Logic {
         this.rules = new LinkedList<>();
     }
 
-    public void addRule(Expression e, String value) {
-        rules.add(rule(e, value));
+    public void addRule(Rule r) {
+        rules.add(r);
     }
 
     public Map<String, Double> results(Map<String, Double> args) {
@@ -27,18 +27,5 @@ public class Logic {
             }
         }
         return results;
-    }
-
-    @FunctionalInterface
-    private interface Rule {
-        Map<String, Double> apply(Map<String, Double> args);
-    }
-
-    private Rule rule(Expression e, String value) {
-        return args -> {
-            Map<String, Double> res = new HashMap<>();
-            res.put(value, e.apply(args));
-            return res;
-        };
     }
 }
