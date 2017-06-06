@@ -14,7 +14,7 @@ public class Variable {
     private final double max, min;
     private final static double N_INT = 5000;
 
-    Variable(String name, double min, double max) {
+    public Variable(String name, double min, double max) {
         this.name = name;
         this.mFnc = new HashMap<>();
         this.min = min;
@@ -35,7 +35,7 @@ public class Variable {
     }
 
 
-    public double defuzzification(Map<String, Double> wages) {
+    double defuzzification(Map<String, Double> wages) {
         Function<Double, Double> getMax = (Double x) -> {
             double tempMax = 0.;
             for (Map.Entry<String, FFunction> entry : mFnc.entrySet()) {
@@ -61,7 +61,7 @@ public class Variable {
         return sumX/sum;
     }
 
-    public double fuzzification(double x, String value) {
+    double fuzzification(double x, String value) {
         return mFnc.containsKey(value) ? mFnc.get(value).apply(x) : 0.0;
     }
 
