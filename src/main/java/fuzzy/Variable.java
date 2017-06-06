@@ -1,5 +1,6 @@
 package fuzzy;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -58,15 +59,27 @@ public class Variable {
             sum += a;
             f = f2;
         }
-        return sumX/sum;
+        return sumX > 0 && sum > 0 ? sumX/sum : 0.0;
     }
 
     double fuzzification(double x, String value) {
         return mFnc.containsKey(value) ? mFnc.get(value).apply(x) : 0.0;
     }
 
+    Map<String, Double> fuzzification(double x) {
+        Map<String, Double> res = new HashMap<>();
+        for (Map.Entry<String, FFunction> entry : mFnc.entrySet()) {
+            res.put(entry.getKey(), entry.getValue().apply(x));
+        }
+        return res;
+    }
+
     public Expression eq(String value) {
         return args -> args.containsKey(getName()) ? fuzzification(args.get(name), value) : 0.0;
+    }
+
+    public Output asOutput() {
+        return new Output(this);
     }
 
 }

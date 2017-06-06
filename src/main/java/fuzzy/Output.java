@@ -5,12 +5,12 @@ import java.util.*;
 /**
  * Created by wojciech on 03.06.17.
  */
-public class Fuzzy {
+public class Output {
 
     private final List<Rule> rules;
     private final Variable output;
 
-    public Fuzzy(Variable output) {
+    Output(Variable output) {
         this.rules = new LinkedList<>();
         this.output = output;
     }
@@ -32,5 +32,9 @@ public class Fuzzy {
 
     public double crisp(Map<String, Double> args) {
         return output.defuzzification(fuzzy(args));
+    }
+
+    public String getName() {
+        return output.getName();
     }
 }
