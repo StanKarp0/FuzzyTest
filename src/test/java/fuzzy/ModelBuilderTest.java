@@ -5,38 +5,40 @@ import model.Car;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.*;
+import java.util.*;
 
 /**
  * Created by wojciech on 06.06.17.
  */
-public class ModelTest {
+public class ModelBuilderTest {
 
     @Test
     public void addVariable() throws Exception {
-        Model<Car> m = new Model<>();
+        Model.Builder<Car> m = new Model.Builder<>();
 
-        Variable price = new Variable("price", 0., 1000000);
-        price.addMFnc("low", FFunction.trapmf(-1, 0, 5000,10000));
-        price.addMFnc("medium", FFunction.trapmf(6000, 7500, 35000,40000));
-        price.addMFnc("high", FFunction.trapmf(30000, 38000, 1000000,1000001));
+        Variable price = new Variable("price", 0., 500000);
+        price.addMFnc("low", FFunction.gaussmf(20000, 0));
+        price.addMFnc("medium", FFunction.gaussmf(20000, 40000));
+        price.addMFnc("high", FFunction.gaussmf(200000, 500000));
 
         m.addVariable(price, Car::getCost);
 
         List<Car> cars = new MockCarDao().findAll();
+        List<Model<Car>> models = new LinkedList<>();
         for(Car c: cars) {
-            Assert.assertEquals(price.fuzzification(c.getCost()), m.getArgs(c, "price"));
+            Model<Car> mc = m.get(c);
+            models.add(mc);
+            Assert.assertEquals(price.fuzzification(c.getCost()), mc.getFuzzy("price"));
         }
+
+        Map<String, Double> userInput = price.fuzzification(37000);
+        Model.sort("price", userInput, models);
+        models.forEach(a -> System.out.println(" " + a.distance("price", userInput) + " | " + a));
     }
 
     @Test
     public void addRelation() throws Exception {
-        Model<Car> m = new Model<>();
+        Model.Builder<Car> m = new Model.Builder<>();
 
         Variable maxSpeed = new Variable("max_speed", 0., 500.);
         maxSpeed.addMFnc("slow", FFunction.trapmf(-1, 0, 110, 130));
@@ -49,9 +51,9 @@ public class ModelTest {
         power.addMFnc("fast", FFunction.trapmf(180, 210, 500, 501));
 
         Variable speed = new Variable("speed", 0., 10.);
-        speed.addMFnc("slowS", FFunction.trapmf(-1, 0, 2, 3));
-        speed.addMFnc("averageS", FFunction.trapmf(1, 3, 6, 8));
-        speed.addMFnc("fastS", FFunction.trapmf(7, 9, 10, 11));
+        speed.addMFnc("slowS", FFunction.gaussmf(1.5, 0));
+        speed.addMFnc("averageS", FFunction.gaussmf(1.5, 5));
+        speed.addMFnc("fastS", FFunction.gaussmf(1.5, 10));
 
         Output outSpeed = speed.asOutput();
         outSpeed.addRule(maxSpeed.eq("slow").or(power.eq("slow")).then("slowS"));
@@ -66,12 +68,21 @@ public class ModelTest {
         });
 
         List<Car> cars = new MockCarDao().findAll();
+        List<Model<Car>> models = new LinkedList<>();
         for(Car c: cars) {
             Map<String, Double> input = new HashMap<>();
             input.put("max_speed", c.getMaxSpeed());
             input.put("power", c.getPower());
-            Assert.assertEquals(outSpeed.fuzzy(input), m.getArgs(c, "speed"));
+            Model<Car> mc = m.get(c);
+            Assert.assertEquals(outSpeed.fuzzy(input), mc.getFuzzy("speed"));
+            models.add(mc);
         }
+
+        Map<String, Double> userInput = speed.fuzzification(8.);
+        System.out.println(userInput);
+        Model.sort("speed", userInput, models);
+        models.forEach(a -> System.out.println(a.getFuzzy("speed") + "|" + a.distance("speed", userInput) + " | " + speed.defuzzification(a.getFuzzy("speed"))));
+
     }
 
     @Test

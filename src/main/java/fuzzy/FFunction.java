@@ -18,4 +18,9 @@ public interface FFunction {
         return x -> Math.max(Math.min((x - a) / bma, (c - x) / cmb), 0.);
     }
 
+    static FFunction gaussmf(double sig, double c) {
+        final double a = -1. / (2. * sig * sig);
+        return x -> Math.exp(a * Math.pow(x - c, 2.));
+    }
+
 }
